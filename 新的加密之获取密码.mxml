@@ -5,14 +5,24 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.controls.Alert;
 			import mx.utils.StringUtil;
 			protected function button1_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				if(da.text.length!=10){
+					Alert.show("请检查日期的格式yyyy-mm-dd");
+					return ;
+				}
 				code.text=StringUtil.trim(getCode(da.text));
 			}
 			private function getCode($code:String):String{
 				//			var str:String="";
+				var codes:Array=$code.split("-");
+				if(codes.length!=3 || $code.length!=10){
+					Alert.show("请检查日期的格式yyyy-mm-dd");
+					return null;
+				}
 				var list:Array=[];
 				for (var i:int = 0; i < 10; ++i) 
 				{
@@ -27,7 +37,7 @@
 					}
 				}
 				trace(list);
-				var codes:Array=$code.split("-");
+				
 				for (var j:int = 0; j < codes.length; j++) 
 				{
 					var newC:int=int(codes[j]);
@@ -62,24 +72,37 @@
 				da.text="";
 			}
 			
+			protected function copyHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				Clipboard.generalClipboard.clear();
+				Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT,code.text,false);
+				Alert.show("已经复制到剪切板");
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
-	<s:VGroup textAlign="center">
-		<s:HGroup>
-			<s:Label text="到期时间："/>
-			<s:TextInput text="yyyy-mm-dd" color="0xcccccc" id="da" mouseDown="txtHandler(event)"/>
-			<s:Button label="获取" click="button1_clickHandler(event)"></s:Button>
+	<s:VGroup textAlign="center" left="20" top="60">
+		<s:HGroup >
+			<s:Label text="输入到期时间：" fontSize="20" fontFamily="微软雅黑"/>
+			<s:TextInput text="yyyy-mm-dd" color="0xcccccc" id="da" mouseDown="txtHandler(event)" fontSize="18"/>
+			<s:Button label="计算" click="button1_clickHandler(event)" fontSize="20" fontFamily="微软雅黑"></s:Button>
 		</s:HGroup>
-		
-		
-		<s:TextArea id="code" height="40" width="240"/>
+		<s:HGroup >
+			<s:Label text="密码:" fontSize="20" fontFamily="微软雅黑">
+			</s:Label>
+			<s:TextArea  id="code" height="20" width="360" fontSize="14"/>
+		</s:HGroup>
+		<s:Button label="copy" fontSize="20" fontFamily="微软雅黑" click="copyHandler(event)">
+			
+		</s:Button>
 	</s:VGroup>
 	
-		
+	
 	
 	
 </s:WindowedApplication>
