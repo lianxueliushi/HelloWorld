@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="false">
+	<fx:Metadata>
+		[Event(name="listItemClick",type="events.ListClickEvent")]
+		[Event(name="orderChange",type="flash.events.Event")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import events.ListClickEvent;
+			private static function getColor(data:Object):uint
+			{
+				// TODO Auto Generated method stub
+				return 0xcccccc;  
+			}
+			private var color:uint;
+			protected function clickHandler(event:MouseEvent):void
+			{
+				var listclickevent:ListClickEvent=new ListClickEvent("listItemClick",data,true);  
+				this.dispatchEvent(listclickevent); 
+				btnSure.visible=true;
+			}
+			private var selectedState:Boolean;
+			public var orderN:String;
+			public var lightN:uint;
+			public var desN:String;
+			public var timeN:String;
+			public var typeN:String;
+			public function selectColor():void{
+				color=fill.color;
+				fill.color=0x004d82;
+				selectedState=true;
+				btnSure.visible=true;
+			}
+			public function normalColor():void{
+				fill.color=color;
+				selectedState=false;
+				btnSure.visible=false;
+			}
+			private  function updateData():void{
+				orderN=order.selectedIndex==0?'open':'close';
+				trace("order:"+orderN);
+				lightN=int(light.text);
+				desN=des.text;
+				timeN=time.text;
+				typeN=type.selectedIndex==0?Node.Type_light:Node.Type_wutai;
+				trace("type:"+typeN+"data:"+data.type);
+				if(typeN==Node.Type_wutai){
+					orderN="open";
+					order.selectedIndex=0;
+				}
+				this.dispatchEvent(new Event("orderChange",true));
+			}
+			protected function changeHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				btnSure.visible=false;
+				updateData();
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<s:Group width="100%" height="100%" click="clickHandler(event)" color="{selectedState?0xff0000:0x000000}">
+		<s:Rect left="0" right="0" top="0" bottom="0">  
+			<s:fill>  
+				<s:SolidColor id="fill" color="{getColor(data)}"/>  
+			</s:fill>  
+			<s:stroke>
+				<s:SolidColorStroke color="0x333333" weight="0.2">
+					
+				</s:SolidColorStroke>
+			</s:stroke>
+		</s:Rect>  
+		<s:HGroup gap="10" height="33" verticalAlign="middle" paddingLeft="10">
+			<!--<s:Label text="{data.time}"/>
+			<s:Label text="{data.order}"/>
+			<s:Label text="{data.light}"/>-->
+			<s:TextInput id="time" text="{data.time}" width="100"/>
+			<s:ComboBox fontSize="12" id="order" width="100" selectedIndex="{data.order=='open'?0:1}"> 
+				<s:ArrayCollection> 
+					<fx:Object label="开" data="0"/> 
+					<fx:Object label="关" data="1"/> 
+				</s:ArrayCollection> 
+			</s:ComboBox> 
+			<s:ComboBox id="type" fontSize="12" width="100" selectedIndex="{data.type==Node.Type_light?0:1}"> 
+				<s:ArrayCollection> 
+					<fx:Object label="沙盘灯" data="0"/> 
+					<fx:Object label="舞台灯" data="1"/> 
+				</s:ArrayCollection> 
+			</s:ComboBox>
+			<s:TextInput id="light" text="{data.light}" width="100" />
+			<s:TextInput id="des" text="{data.des}" width="100" />
+			<s:Button id="btnSure" label="提交(在此处编辑后必须提交)" click="changeHandler(event)" visible="false">
+				
+			</s:Button>
+		</s:HGroup>
+	</s:Group>
+	
+	
+</s:ItemRenderer>

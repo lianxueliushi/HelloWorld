@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<position x="0" y="0" width="2940" height="768" url="D:/项目资料/资料_睢县档案馆/18光电沙盘/投影部分/默认界面/"><!--默认视频或者图片所在的文件夹 -->
+	</position>
+	<position x="0" y="0" width="2940" height="768" url="D:/项目资料/资料_睢县档案馆/18光电沙盘/投影部分/正片界面/"><!--正片视频所在的文件夹 -->
+	</position>
+	<localip>192.168.1.78</localip>
+	<localport>13579</localport>
+	<video name="总片子">
+		<play time="00:00:01" lightname="总开">
+			<light order="open">0</light>
+		</play>
+		<play time="00:00:12" lightname="黑场">
+			<light order="close">0</light>
+		</play>
+		<play time="00:00:15">
+			<light order="open">0</light>
+		</play>
+		<play time="00:02:54" lightname="">
+			<light order="open">50</light>
+		</play>
+
+		<play time="00:03:02" lightname="">
+			<light order="open">21</light>
+		</play>
+		<play time="00:03:03" lightname="">
+			<light order="open">17</light>
+			<light order="open">18</light>
+			<light order="open">19</light>
+		</play>
+
+		<play time="00:03:11">
+			<light order="open">7</light>
+		</play>
+		<play time="00:03:16">
+			<light order="open">8</light>
+		</play>
+		<play time="00:03:19">
+			<light order="open">0</light>
+		</play>
+
+		<play time="00:03:30" lightname="行政文化服务区-闪烁">
+			<light order="close">0</light>
+		</play>
+		<play time="00:03:32" lightname="行政文化服务区-停">
+
+			<light order="open">54</light>
+			<light order="open">56</light>
+		</play>
+		<play time="00:03:40" lightname="生态休闲区-停">
+			<light order="open">9</light>
+			<light order="open">53</light>
+		</play>
+		<play time="00:03:47" lightname="商贸居住区-停">
+			<light order="open">49</light>
+			<light order="open">59</light>
+			<light order="open">60</light>
+		</play>
+		<play time="00:03:55" lightname="产业聚集区-停">
+			<light order="open">57</light>
+			<light order="open">61</light>
+		</play>
+		<play time="00:04:42" lightname="">
+			<light order="close">0</light>
+		</play>
+		<play time="00:05:03" lightname="">
+			<light order="open">22</light>
+		</play>
+		<play time="00:05:09" lightname="">
+
+			<light order="open">23</light>
+		</play>
+		<play time="00:05:15" lightname="">
+
+			<light order="open">24</light>
+		</play>
+		<play time="00:05:20" lightname="">
+
+			<light order="open">25</light>
+		</play>
+		<play time="00:05:21" lightname="">
+
+			<light order="open">26</light>
+		</play>
+		<play time="00:05:22" lightname="">
+
+			<light order="open">27</light>
+		</play>
+		<play time="00:05:30" lightname="">
+
+			<light order="open">10</light>
+		</play>
+		<play time="00:05:31" lightname="">
+
+			<light order="open">5</light>
+		</play>
+		<play time="00:05:32" lightname="">
+
+			<light order="open">3</light>
+		</play>
+		<play time="00:05:33" lightname="">
+
+			<light order="open">2</light>
+		</play>
+		<play time="00:05:40" lightname="">
+
+			<light order="open">10</light>
+		</play>
+		<play time="00:05:41" lightname="">
+
+			<light order="open">11</light>
+		</play>
+		<play time="00:05:42" lightname="">
+
+			<light order="open">3</light>
+		</play>
+		<play time="00:05:43" lightname="">
+
+			<light order="open">2</light>
+		</play>
+		<play time="00:05:44" lightname="">
+
+			<light order="open">13</light>
+		</play>
+		<play time="00:05:59" lightname="">
+			<light order="close">0</light>
+		</play>
+		<play time="00:06:39" lightname="">
+
+			<light order="open">14</light>
+		</play>
+		<play time="00:06:40" lightname="">
+			<light order="open">15</light>
+		</play>
+
+		<play time="00:07:06" lightname="">
+			<light order="open">20</light>
+		</play>
+		<play time="00:07:09" lightname="">
+
+			<light order="open">25</light>
+		</play>
+		<play time="00:07:22" lightname="">
+
+			<light order="open">16</light>
+		</play>
+		<play time="00:07:39" lightname="">
+			<light order="close">0</light>
+		</play>
+		<play time="00:08:50" lightname="">
+			<light order="open">0</light>
+		</play>
+	</video>
+</root>

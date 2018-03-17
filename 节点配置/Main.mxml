@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" width="1366" height="768" creationComplete="init(event)" xmlns:local="*">
+	<fx:Script>
+		<![CDATA[
+			import flash.utils.setTimeout;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			
+			import spark.collections.Sort;
+			import spark.collections.SortField;
+			
+			import events.ListClickEvent;
+			protected function url1Select(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var file:File=new File();
+				var types:FileFilter=new FileFilter("视频文件","*");
+				file.browse([types]);
+				file.addEventListener(Event.SELECT,url1Handler);
+			}
+			protected function url2Select(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var file:File=new File();
+				file.browseForDirectory("请选择正片界面视频所在的文件夹");
+				file.addEventListener(Event.SELECT,url2Handler);
+			}
+			
+			protected function url1Handler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				video1Url.text=decodeURI(event.target.url).substr(8);
+			}
+			protected function url2Handler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+			}
+			[Bindable]
+			private var myDataList:ArrayCollection;
+			protected function init(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				myDataList=new ArrayCollection();
+				myList.addEventListener("orderChange",orderChangeHandler);
+				
+			}
+			private var selectIndex:uint;
+			private var selectItem:*;
+			private var currTime:String;
+			/*	[Bindable]
+			private var port:uint;
+			[Bindable]
+			private var ip:String="";*/
+			protected function listClickHandler(event:ListClickEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(selectItem) selectItem.normalColor();
+				var item:*=event.target;
+				item.selectColor();
+				selectItem=item;
+				selectIndex=myList.selectedIndex;
+				btnDelNode.visible=true;
+			}
+			protected function delHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				myDataList.removeItemAt(selectIndex);
+				btnDelNode.visible=false;
+			}
+			
+			protected function chooseHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var file:File=new File();
+				var types:FileFilter=new FileFilter("xml文件","*.xml");
+				file.browse([types]);
+				
+				file.addEventListener(Event.SELECT,selectXML);
+			}
+			
+			protected function saveHandler(event:MouseEvent):void
+			{
+				// 保存xml文件
+				updateData();
+				currTime="-1";
+				var xmlFile:File=File.desktopDirectory;
+				var xml:XML=<root/>;
+				var pos1:XML=<position url={video1Url.text}></position>;
+				
+				xml.appendChild(pos1);
+				
+				var ipxml:XML=<localip>{ip.text}</localip>;
+				var localport:XML=<localport>{port.text}</localport>;
+				xml.appendChild(ipxml);
+				xml.appendChild(localport);
+				var vd:XML=<video />;
+				for (var i:int = 0; i < myDataList.length; i++) 
+				{
+					var node:Node=myDataList[i] as Node;
+					var play:XML;
+					var lt:XML
+					if(node.type==Node.Type_light){
+						lt=<light order={node.order} lightname={node.des}>{node.light}</light>;
+					}
+					else{
+						lt=<wutai lightname={node.des}>{node.light}</wutai>
+					}
+					if(node.time!=currTime){
+						play=<play time={node.time} />;
+						currTime=node.time;
+						play.appendChild(lt);
+						vd.appendChild(play);
+					}
+					else{
+						play.appendChild(lt);
+					}
+				}
+				
+				xml.appendChild(vd);
+				var back:XML=<back><wutai>21</wutai></back>;
+				xml.appendChild(back);
+				xmlFile.save(xml,"videoConfig.xml");
+			}
+			
+			protected function editTxt_addItemDataHandler(event:ListClickEvent):void
+			{
+				btnDelNode.visible=false;
+				// 添加数据
+				myDataList.addItem(event.data);
+			}
+			
+			protected function selectXML(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				var file:File=event.target as File;
+				var loader:URLLoader=new URLLoader();
+				loader.addEventListener(Event.COMPLETE,xmlReady);
+				Alert.show("选择外部配置文件将覆盖当前修改的配置，确定覆盖吗？","",Alert.YES|Alert.NO,this,function closeHandler(e:CloseEvent):void
+				{
+					// TODO Auto Generated method stub
+					if(e.detail==Alert.YES){
+						loader.load(new URLRequest(decodeURI(file.url).substr(8)));
+					}
+					else{
+						//						Alert.show("取消！");
+					}
+				});
+				
+			}
+			
+			protected function xmlReady(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				var xml:XML=XML(event.currentTarget.data);
+				var pos:XMLList=xml.elements("position");
+				video1Url.text=xml.position.@url;
+				ip.text=xml.localip;
+				port.text=xml.localport;
+				var plays:XMLList=xml.elements("video").child("play");
+				myDataList.removeAll();
+				for (var j:int = 0; j < plays.length(); j++) 
+				{
+					var time:String=plays[j].@time;
+					if(plays[j].elements("light")){
+						for (var k:int = 0; k < plays[j].elements("light").length(); k++) 
+						{
+							var order:XML=plays[j];
+							var node:Node=new Node(time,order.light[k].@order,order.light[k],order.light[k].lightname,Node.Type_light);
+							myDataList.addItem(node);
+						}
+					}
+					if(plays[j].elements("wutai")){
+						for (var k:int = 0; k < plays[j].elements("wutai").length(); k++) 
+						{
+							var order:XML=plays[j];
+							var node:Node=new Node(time,"open",order.wutai[k],order.wutai[k].lightname,Node.Type_wutai);
+							myDataList.addItem(node);
+						}
+					}
+					
+				}
+				updateData();
+				
+			}
+			
+			protected function orderChangeHandler(event:Event):void
+			{
+				// TODO Auto-generated method stub
+				var i:int=myList.selectedIndex;
+				var data:Node=myDataList.getItemAt(i) as Node;
+				trace("before"+data.order);
+				data.order=event.target.orderN;
+				data.light=event.target.lightN;
+				data.time=event.target.timeN;
+				data.des=event.target.desN;
+				data.type=event.target.typeN;
+				myDataList[i]=data;
+				trace("after"+myDataList.getItemAt(i).order);
+			}
+			
+			private function updateData():void
+			{
+				// TODO Auto Generated method stub
+				var sort:Sort=new Sort();
+				sort.fields=[new SortField("time",false)];
+				myDataList.sort=sort;
+				myDataList.refresh();
+			}
+			
+			protected function clearHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				myDataList.removeAll();
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:VGroup left="20" top="10" gap="2">
+		<s:Panel width="1326" height="100" title="影片信息">
+			<s:VGroup gap="5" left="20" top="10">
+				<s:Label text="默认影片" fontWeight="bold" />
+				<s:HGroup top="20">
+					
+					<s:Label text="路径："/><s:TextInput  width="260" id="video1Url"/><s:Button label="浏览" click="url1Select(event)"/>
+				</s:HGroup>
+				
+				
+			</s:VGroup>
+			
+		</s:Panel>
+		
+		<s:Panel width="1326" height="100" title="本机ip属性">
+			<s:HGroup gap="5" left="20" top="20">
+				<s:Label text="本机ip："/><s:TextInput id="ip" width="100"/>
+				<s:Label text="绑定端口："/><s:TextInput id="port" width="50"/>
+			</s:HGroup>
+		</s:Panel>
+		<s:Panel title="视频节点" id="mymap" width="1326" height="470">
+			<s:VGroup gap="10" left="20" top="10" >
+				<s:HGroup gap="50" height="33" verticalAlign="middle" paddingLeft="40" fontSize="14" fontWeight="bold">
+					<s:Label text="时间节点"/>
+					<s:Label text="控制命令"/>
+					<s:Label text="灯光类型"/>
+					<s:Label text="灯光路数0代表全部" width="55" fontSize="12"/>
+					<s:Label text="节点描述"/>
+				</s:HGroup>
+				<local:MyList id="myList" width="800" height="300" dataProvider="{myDataList}" itemRenderer="MyItemRenderer" listItemClick="listClickHandler(event)"></local:MyList>
+				<s:HGroup id="controls" visible="true">
+					<s:Button id="btnClear" label="清空节点" click="clearHandler(event)" visible="true"/>
+					<s:Button id="btnDelNode" label="删除节点" click="delHandler(event)" visible="false"/>
+				</s:HGroup>
+				<local:EditView id="editTxt" addItemData="editTxt_addItemDataHandler(event)" visible="true"/>
+			</s:VGroup>
+			<s:HGroup left="990" top="405">
+				<s:Button id="btnAddNode" label="读取外部配置文件(将覆盖当前配置)" click="chooseHandler(event)" />
+				<s:Button id="btnSave" label="保存当前配置" click="saveHandler(event)" />
+			</s:HGroup>
+			
+		</s:Panel>
+		
+		
+	</s:VGroup>
+</s:WindowedApplication>

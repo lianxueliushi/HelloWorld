@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="800">
+	<fx:Metadata>
+		[Event(name="addItemData", type="events.ListClickEvent")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import events.ListClickEvent;
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var ordertxt:String=order.selectedIndex==0?'open':"close";
+				dispatchEvent(new ListClickEvent("addItemData",new Node(time.text,ordertxt,int(light.text),des.text,type.selectedIndex==0?Node.Type_light:Node.Type_wutai)));
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<s:Rect left="0" right="0" top="0" bottom="0">  
+		<s:fill>  
+			<s:SolidColor id="fill" color="0xeeeeee"/>  
+		</s:fill>  
+		<s:stroke>
+			<s:SolidColorStroke color="0x666666" weight="0.2">
+				
+			</s:SolidColorStroke>
+		</s:stroke>
+	</s:Rect>  
+	<s:HGroup height="33" verticalAlign="middle" left="10" right="10">
+		<s:Label width="30" text="时间" />
+		<s:TextInput id="time" text="00:00:00"/>
+		<s:Label width="30" text="命令" />
+		<s:ComboBox fontSize="12" id="order" width="131" selectedIndex="0"> 
+			<s:ArrayCollection> 
+				<fx:Object label="开" data="0"/> 
+				<fx:Object label="关" data="1"/> 
+			</s:ArrayCollection> 
+		</s:ComboBox> 
+		<s:ComboBox id="type" fontSize="12" width="95" selectedIndex="0"> 
+			<s:ArrayCollection> 
+				<fx:Object label="沙盘灯" data="0"/> 
+				<fx:Object label="舞台灯" data="1"/> 
+			</s:ArrayCollection> 
+		</s:ComboBox>
+		<s:TextInput id="light" text="0"/>
+		<s:TextInput id="des" text="节点描述" />
+		<s:Button label="添加节点" click="button1_clickHandler(event)" />
+	</s:HGroup>
+	
+	
+</s:Group>
